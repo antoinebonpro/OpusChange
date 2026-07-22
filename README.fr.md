@@ -33,6 +33,8 @@ permet d'itérer jusqu'à la perfection.
 | Export markdown (presse-papier) + capture PNG avec badges | ✅ |
 | Sauvegarde par URL (annotations restaurées au retour) | ✅ |
 | Panneau déplaçable et repliable · mode sombre · compteur sur l'icône | ✅ |
+| **Modes d'export** : Corriger · Améliorer · Audit (adapte instructions et contenu) | ✅ |
+| **Build Chrome / Edge / Brave / Arc** (MV3, même code) | ✅ |
 
 ## Installation
 
@@ -59,6 +61,15 @@ Firefox bloque par défaut l'accès des extensions aux fichiers locaux :
 *Alternative : servez votre dossier en local — `python -m http.server 8000` —
 puis ouvrez `http://localhost:8000/votre-page.html`.*
 
+### Installer sur Chrome / Edge / Brave / Arc
+
+1. Lancez `powershell -File build.ps1` (crée `dist/chrome`)
+2. Ouvrez **`chrome://extensions`** (ou `edge://extensions`, `brave://extensions`)
+3. Activez le **Mode développeur** (en haut à droite)
+4. Cliquez **« Charger l'extension non empaquetée »** et sélectionnez le dossier **`dist/chrome`**
+5. Pour les fichiers locaux : ouvrez les détails de l'extension et activez
+   **« Autoriser l'accès aux URL de fichier »**
+
 ### Installation permanente (optionnel)
 
 Firefox exige que les extensions permanentes soient signées par Mozilla :
@@ -78,6 +89,12 @@ minutes, installez-le par double-clic.
 5. Exportez :
    - **📋 Copier pour l'IA** → tout le markdown dans le presse-papier
    - **📸 PNG** → capture de la page avec les badges (dossier Téléchargements)
+
+Choisissez un **mode d'export** au-dessus du bouton de copie : **Corriger**
+(réparations strictes uniquement), **Améliorer** (l'IA propose aussi mieux :
+design, accessibilité, performances) ou **Audit** (rapport seulement, rien n'est
+modifié). Les exports Améliorer et Audit incluent un **plan de la page**
+(titres h1-h3 avec leurs sélecteurs). Votre choix est mémorisé.
 
 ### La boucle de perfection 🔄
 
@@ -157,7 +174,9 @@ votre Firefox) :
 
 | Fichier | Rôle |
 |---|---|
-| `manifest.json` | Déclaration de l'extension (permissions, scripts, raccourci, langues) |
+| `manifest.json` | Déclaration Firefox (MV2) |
+| `manifest.chrome.json` | Manifest Chromium (MV3), utilisé par le build |
+| `build.ps1` | Assemble `dist/firefox`, `dist/chrome` et les zips |
 | `background.js` | Clic sur l'icône, compteur, capture PNG |
 | `content/selector.js` | Analyse d'élément : sélecteur unique, chemin complet, section, styles, HTML |
 | `content/annotator.js` | Surbrillance, badges, panneau, éditeur, export, persistance |
@@ -173,10 +192,9 @@ votre Firefox) :
 ## Idées pour la suite
 
 - Analyse automatique de la page (alt manquants, images lourdes, liens vides…) créant des annotations pré-remplies
-- Modes d'export Corriger / Améliorer / Audit
 - Capture d'écran individuelle par élément annoté
 - Export JSON structuré
-- Portage Chrome/Edge (Manifest V3)
+- Publication sur les stores (addons.mozilla.org, Chrome Web Store)
 
 ## Licence
 

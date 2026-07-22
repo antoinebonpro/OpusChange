@@ -32,6 +32,8 @@ errors** detected, and the **✓ Resolved** status lets you iterate to perfectio
 | Markdown export (clipboard) + PNG capture with badges | ✅ |
 | Per-URL persistence (annotations restored on revisit) | ✅ |
 | Draggable, collapsible panel · dark mode · to-do counter on the toolbar icon | ✅ |
+| **Export modes**: Fix · Improve · Audit (adapts instructions and content) | ✅ |
+| **Chrome / Edge / Brave / Arc build** (MV3, same codebase) | ✅ |
 
 ## Installation
 
@@ -57,6 +59,14 @@ Firefox blocks extension access to local files by default:
 *Alternative: serve your folder locally — `python -m http.server 8000` — and open
 `http://localhost:8000/your-page.html`.*
 
+### Install on Chrome / Edge / Brave / Arc
+
+1. Run `powershell -File build.ps1` (creates `dist/chrome`)
+2. Open **`chrome://extensions`** (or `edge://extensions`, `brave://extensions`)
+3. Enable **Developer mode** (top right)
+4. Click **"Load unpacked"** and select the **`dist/chrome`** folder
+5. For local files: open the extension's details and enable **"Allow access to file URLs"**
+
 ### Permanent install (optional)
 
 Firefox requires permanent extensions to be signed by Mozilla: submit the zipped
@@ -75,6 +85,11 @@ folder on [addons.mozilla.org](https://addons.mozilla.org) as **"unlisted"**
 5. Export:
    - **📋 Copy for AI** → full markdown in your clipboard
    - **📸 PNG** → page capture with badges (Downloads folder)
+
+Pick an **export mode** above the copy button: **Fix** (strict repairs only),
+**Improve** (the AI also suggests better design/accessibility/performance) or
+**Audit** (report only, nothing modified). Improve and Audit exports include a
+**page outline** (h1-h3 headings with their selectors). Your choice is remembered.
 
 ### The perfection loop 🔄
 
@@ -153,7 +168,9 @@ What **📋 Copy for AI** puts in your clipboard (in your Firefox language):
 
 | File | Role |
 |---|---|
-| `manifest.json` | Extension declaration (permissions, scripts, shortcut, locales) |
+| `manifest.json` | Firefox (MV2) extension declaration |
+| `manifest.chrome.json` | Chromium (MV3) manifest, used by the build |
+| `build.ps1` | Assembles `dist/firefox`, `dist/chrome` and the zips |
 | `background.js` | Icon click, to-do counter, PNG capture |
 | `content/selector.js` | Element analysis: unique selector, full path, section, styles, HTML |
 | `content/annotator.js` | Highlighting, badges, panel, editor, export, persistence |
@@ -169,10 +186,9 @@ What **📋 Copy for AI** puts in your clipboard (in your Firefox language):
 ## Roadmap ideas
 
 - Automatic page audit (missing alts, heavy images, empty links…) creating pre-filled annotations
-- Export modes: Fix / Improve / Audit
 - Per-element screenshot capture
 - Structured JSON export
-- Chrome/Edge port (Manifest V3)
+- Store publishing (addons.mozilla.org, Chrome Web Store)
 
 ## License
 
