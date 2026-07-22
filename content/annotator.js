@@ -33,6 +33,11 @@
   let annotations = [];
   let nextNumber = 1;
 
+  /* Mode d'export : fix (corriger) | improve (améliorer) | audit. */
+  const MODE_KEY = 'mkp-mode';
+  const MODES = ['fix', 'improve', 'audit'];
+  let exportMode = 'fix';
+
   let uiVisible = false; // panneau + badges affichés
   let picking = false;   // mode "cliquer pour annoter" actif
   let els = {};          // éléments de notre UI
@@ -397,6 +402,26 @@
     });
   }
 
+  /* ------------------------------------------------------- mode d'export */
+
+  function modeLabelKey(m) {
+    return 'mode' + m.charAt(0).toUpperCase() + m.slice(1);
+  }
+
+  function setMode(m) {
+    if (!MODES.includes(m)) m = 'fix';
+    exportMode = m;
+    B.storage.local.set({ [MODE_KEY]: m }).catch(() => {});
+    refreshModeChips();
+  }
+
+  function refreshModeChips() {
+    if (!els.modeChips) return;
+    for (const chip of els.modeChips.children) {
+      chip.setAttribute('aria-pressed', String(chip.getAttribute('data-mkp-mode') === exportMode));
+    }
+  }
+
   /* ------------------------------------------------------------- panneau */
 
   function buildPanel() {
@@ -438,6 +463,17 @@
     els.errorsInfo = h('div', 'mkp-errors-info');
     els.errorsInfo.style.display = 'none';
     body.appendChild(els.errorsInfo);
+
+    els.modeChips = h('div', 'mkp-mode-chips');
+    for (const m of MODES) {
+      const chip = h('button', 'mkp-chip mkp-mode-chip', t(modeLabelKey(m)));
+      chip.setAttribute('data-mkp-mode', m);
+      chip.title = t(modeLabelKey(m) + 'Tip');
+      chip.addEventListener('click', () => setMode(m));
+      els.modeChips.appendChild(chip);
+    }
+    body.appendChild(els.modeChips);
+    refreshModeChips();
 
     const actions = h('div', 'mkp-panel-actions');
     const copyBtn = h('button', 'mkp-btn mkp-btn-primary', t('copyAI'));
@@ -652,7 +688,8 @@
     const file = sourceFilePath();
 
     const lines = [];
-    lines.push('# ' + t('mdTitle') + ' — ' + (document.title || location.pathname));
+    const titleKey = { fix: 'mdTitleFix', improve: 'mdTitleImprove', audit: 'mdTitleAudit' }[exportMode];
+    lines.push('# ' + t(titleKey) + ' — ' + (document.title || location.pathname));
     lines.push('');
     if (file) lines.push('- **' + t('mdFile') + '** : `' + file + '`');
     lines.push('- **URL** : ' + location.href);
@@ -664,7 +701,8 @@
         t('mdResolvedNote', [resolved.map((a) => a.n).join(', ')]));
     }
     lines.push('');
-    const instr = file ? t('mdInstructionsFile') : t('mdInstructions');
+    const instrBase = { fix: 'mdInstrFix', improve: 'mdInstrImprove', audit: 'mdInstrAudit' }[exportMode];
+    const instr = t(file ? instrBase + 'File' : instrBase);
     for (const l of instr.split('\n')) lines.push('> ' + l);
     lines.push('');
 
@@ -677,6 +715,18 @@
         lines.push(l);
       });
       lines.push('');
+    }
+
+    if (exportMode !== 'fix') {
+      const outline = M.pageOutline();
+      if (outline.length) {
+        lines.push('## ' + t('mdOutline'));
+        lines.push('');
+        for (const o of outline) {
+          lines.push('- ' + o.level + ' « ' + o.text + ' » — `' + o.selector + '`');
+        }
+        lines.push('');
+      }
     }
 
     lines.push('---');
@@ -799,7 +849,8 @@
 
   /* --------------------------------------------- restauration au chargement */
 
-  B.storage.local.get(PAGE_KEY).then((data) => {
+  B.storage.local.get([PAGE_KEY, MODE_KEY]).then((data) => {
+    if (data && MODES.includes(data[MODE_KEY])) exportMode = data[MODE_KEY];
     const saved = data && data[PAGE_KEY];
     if (Array.isArray(saved) && saved.length) {
       annotations = saved;

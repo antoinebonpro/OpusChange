@@ -533,3 +533,22 @@
     transition: none !important;
   }
 }
+
+/* ------------------------------------------------------- modes d'export */
+
+.mkp-mode-chips {
+  display: flex;
+  gap: 4px;
+  padding-bottom: 8px;
+}
+
+.mkp-mode-chip {
+  flex: 1;
+  text-align: center;
+}
+
+.mkp-mode-chip[aria-pressed="true"] {
+  color: var(--mkp-paper);
+  background: var(--mkp-ink);
+  border-color: var(--mkp-ink);
+}
