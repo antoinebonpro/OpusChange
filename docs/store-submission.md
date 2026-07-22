@@ -6,39 +6,72 @@ Fichiers à uploader : `dist/opuschange-firefox-4.0.1.zip` (AMO) et
 
 ---
 
-## 🦊 addons.mozilla.org (AMO)
+## 🦊 addons.mozilla.org (AMO) — formulaire champ par champ
 
-**Canal** : Listé · **Catégorie** : Developer Tools (Outils de développement)
+**Nom** :
+> OpusChange
 
-**Résumé (max 250 car.)** :
-> Annotate any web page by clicking its elements, then export precise AI-ready
-> instructions: CSS selectors, full DOM paths, styles, JS errors. Fix/Improve/Audit
-> modes, resolved tracking, PNG capture. 100% local, no account, no data collected.
+**Adresse URL du module (slug)** : garder `opuschange`
 
-**Description longue** (champ « À propos de cette extension ») :
-> OpusChange turns visual feedback into instructions an AI coding assistant
-> (Claude Code, ChatGPT, Copilot…) can execute precisely.
->
-> • Click any element — it highlights like the DevTools inspector
-> • Each annotation captures the CSS selector, full DOM path, section, styles,
->   attributes and HTML of the element
-> • 5 annotation types: Edit, Add, Remove, Bug, Question
-> • JavaScript errors on the page are captured and included in the export
-> • 3 export modes: Fix (strict repairs), Improve (AI suggests better),
->   Audit (report only)
-> • Mark annotations as resolved and re-export only what remains
-> • Markdown to clipboard + PNG capture with badges
-> • Annotations persist per URL — 100% locally
->
-> Privacy: no account, no server, no network requests. Nothing leaves your
-> browser unless you copy or download the export yourself.
-> Interface in English and French.
+**Résumé** (déjà rempli depuis le manifest — le garder) :
+> Annotate any web page by clicking its elements and export precise AI-ready instructions (CSS selectors, paths, styles). 100% local.
 
-**Notes pour le reviewer** :
-> The <all_urls> host permission is required because the extension's single
-> purpose is annotating any page the user chooses. No remote code, no
-> analytics, no network requests at all. Data collection: none (declared via
-> data_collection_permissions).
+**Description** (markdown supporté — les 250 premiers caractères portent l'essentiel) :
+
+```markdown
+OpusChange turns visual feedback into instructions an AI coding assistant (Claude Code, ChatGPT, Copilot…) can execute precisely. Click any element, describe the change, and export selectors, DOM paths, styles and JS errors — 100% locally.
+
+**How it works**
+1. Click the OpusChange icon (or Alt+Shift+M)
+2. Hover the page — elements highlight like the DevTools inspector
+3. Click an element, pick a type (Edit · Add · Remove · Bug · Question) and write your comment
+4. Copy the export and paste it into your AI assistant
+
+**What each annotation captures**
+- Unique CSS selector + full DOM path
+- Section context, computed styles, attributes, HTML snippet
+
+**Built for iteration**
+- 3 export modes: Fix (strict repairs), Improve (the AI also suggests better), Audit (report only)
+- JavaScript errors on the page are captured and included
+- Mark annotations as resolved and re-export only what remains
+- Annotations persist per URL; PNG capture with badges
+
+**Privacy**: no account, no server, no network requests. Nothing leaves your browser unless you copy or download the export yourself. Interface in English and French.
+```
+
+**Ce module est expérimental ?** → Non (ne pas cocher)
+
+**Nécessite un paiement / services payants ?** → Non (ne pas cocher)
+
+**Catégories (max 3)** → **Développement web** (une seule suffit, c'est la bonne)
+
+**E-mail d'assistance** : optionnel et **visible publiquement** — mettre son
+adresse ou laisser vide
+
+**Site d'assistance** :
+> https://github.com/antoinebonpro/OpusChange/issues
+
+**Licence** → **Licence MIT** (correspond au fichier LICENSE du dépôt)
+
+**Ce module a une politique de confidentialité ?** → Oui, cocher et coller :
+> OpusChange does not collect, store, transmit or share any user data. All
+> annotations are stored locally in your browser's extension storage and never
+> leave your device. The extension makes no network requests. The only data
+> that leaves the browser is the export you explicitly copy to your clipboard
+> or the PNG capture you download yourself.
+
+**Notes aux testeurs** :
+> - Single purpose: annotate elements of any page the user chooses and export
+>   precise change instructions for AI coding assistants — this is why the
+>   content script requests <all_urls>.
+> - No remote code, no analytics, no network requests at all. Data collection:
+>   none (declared via data_collection_permissions in the manifest).
+> - The submitted code is the original, unminified source — no build step, no
+>   bundler. Public repository: https://github.com/antoinebonpro/OpusChange
+> - To test: open any website, click the toolbar icon (or Alt+Shift+M), click
+>   an element, type a comment, then press the copy button. Try the
+>   Fix / Improve / Audit chips to see the three export variants.
 
 ---
 
