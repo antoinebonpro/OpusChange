@@ -1,0 +1,535 @@
+/* OpusChange — styles de l'overlay.
+ * Identité : instrument de précision — papier/encre, monospace pour les
+ * sélecteurs, couleur réservée aux types d'annotation.
+ * Tout est préfixé "mkp-", z-index maximal, isolé de la page. */
+
+/* ------------------------------------------------------------- variables */
+
+.mkp-panel,
+.mkp-editor,
+.mkp-badge-layer,
+.mkp-hover-tip {
+  --mkp-paper: #fdfdfb;
+  --mkp-ink: #16181d;
+  --mkp-muted: #6b7280;
+  --mkp-line: #e6e4dd;
+  --mkp-hover-bg: #f1efe9;
+  --mkp-shadow: 0 2px 6px rgba(20, 20, 30, 0.08), 0 12px 32px rgba(20, 20, 30, 0.18);
+  --mkp-edit: #2563eb;
+  --mkp-add: #059669;
+  --mkp-remove: #dc2626;
+  --mkp-bug: #d97706;
+  --mkp-question: #7c3aed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .mkp-panel,
+  .mkp-editor,
+  .mkp-badge-layer,
+  .mkp-hover-tip {
+    --mkp-paper: #1b1d22;
+    --mkp-ink: #f2f3f0;
+    --mkp-muted: #9ca3af;
+    --mkp-line: #33363d;
+    --mkp-hover-bg: #26282e;
+    --mkp-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.5);
+    --mkp-edit: #60a5fa;
+    --mkp-add: #34d399;
+    --mkp-remove: #f87171;
+    --mkp-bug: #fbbf24;
+    --mkp-question: #a78bfa;
+  }
+}
+
+/* Couleur par type d'annotation. */
+.mkp-t-edit { --mkp-type: var(--mkp-edit); }
+.mkp-t-add { --mkp-type: var(--mkp-add); }
+.mkp-t-remove { --mkp-type: var(--mkp-remove); }
+.mkp-t-bug { --mkp-type: var(--mkp-bug); }
+.mkp-t-question { --mkp-type: var(--mkp-question); }
+
+/* ------------------------------------------------ surbrillance au survol */
+
+.mkp-hover-box {
+  position: fixed;
+  z-index: 2147483646;
+  pointer-events: none;
+  border: 2px solid #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+  border-radius: 3px;
+  display: none;
+  box-sizing: border-box;
+}
+
+.mkp-hover-tip {
+  position: fixed;
+  z-index: 2147483647;
+  pointer-events: none;
+  display: none;
+  max-width: 60vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--mkp-ink);
+  color: var(--mkp-paper);
+  font: 11px/1.7 ui-monospace, Consolas, monospace;
+  padding: 2px 8px;
+  border-radius: 4px;
+  box-shadow: var(--mkp-shadow);
+}
+
+.mkp-picking, .mkp-picking * {
+  cursor: crosshair !important;
+}
+
+/* ---------------------------------------------------------------- badges */
+
+.mkp-badge-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483645;
+  pointer-events: none;
+}
+
+.mkp-badge {
+  position: fixed;
+  pointer-events: auto;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--mkp-type, #dc2626);
+  color: #fff;
+  font: 700 12px/22px system-ui, sans-serif;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 0 2px #fff;
+  user-select: none;
+  transition: transform 140ms ease;
+}
+
+.mkp-badge:hover {
+  transform: scale(1.18);
+}
+
+@keyframes mkp-pop {
+  0% { transform: scale(0.4); }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.mkp-badge.mkp-pop {
+  animation: mkp-pop 220ms ease-out;
+}
+
+/* --------------------------------------------------------------- panneau */
+
+.mkp-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2147483647;
+  width: 344px;
+  max-height: 72vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--mkp-paper);
+  color: var(--mkp-ink);
+  border: 1px solid var(--mkp-line);
+  border-radius: 14px;
+  box-shadow: var(--mkp-shadow);
+  font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.mkp-panel * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.mkp-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--mkp-line);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.mkp-panel-header:active {
+  cursor: grabbing;
+}
+
+.mkp-collapsed .mkp-panel-header {
+  border-bottom: none;
+}
+
+.mkp-logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mkp-remove);
+  box-shadow: 0 0 0 2px var(--mkp-paper), 0 0 0 3px var(--mkp-remove);
+  flex-shrink: 0;
+}
+
+.mkp-panel-title {
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+}
+
+.mkp-count-pill {
+  background: var(--mkp-ink);
+  color: var(--mkp-paper);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.mkp-header-spacer {
+  flex: 1;
+}
+
+.mkp-icon-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--mkp-muted);
+  padding: 2px 7px;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+.mkp-icon-btn:hover {
+  background: var(--mkp-hover-bg);
+  color: var(--mkp-ink);
+}
+
+.mkp-panel-body {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 8px;
+  overflow: hidden;
+}
+
+.mkp-collapsed .mkp-panel-body {
+  display: none;
+}
+
+.mkp-panel-list {
+  overflow-y: auto;
+  flex: 1;
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 40px;
+}
+
+.mkp-empty {
+  color: var(--mkp-muted);
+  font-size: 12px;
+  padding: 12px 6px;
+  text-align: center;
+}
+
+.mkp-entry {
+  border: 1px solid var(--mkp-line);
+  border-radius: 9px;
+  padding: 8px;
+  position: relative;
+  transition: background 300ms ease, border-color 140ms ease;
+}
+
+.mkp-entry:hover {
+  border-color: var(--mkp-muted);
+}
+
+.mkp-entry.mkp-flash {
+  background: var(--mkp-hover-bg);
+}
+
+.mkp-entry-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  padding-right: 88px;
+}
+
+.mkp-entry-num {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--mkp-type, #dc2626);
+  color: #fff;
+  font: 700 11px/18px system-ui, sans-serif;
+  text-align: center;
+}
+
+.mkp-type-chip {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--mkp-type);
+  border: 1px solid var(--mkp-type);
+  border-radius: 999px;
+  padding: 0 6px;
+  line-height: 1.5;
+}
+
+.mkp-entry-selector {
+  font: 11px/1.4 ui-monospace, Consolas, monospace;
+  color: var(--mkp-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mkp-entry-selector.mkp-missing {
+  color: var(--mkp-remove);
+  text-decoration: line-through;
+}
+
+.mkp-entry-comment {
+  color: var(--mkp-ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mkp-entry-btns {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: flex;
+  gap: 1px;
+}
+
+.mkp-mini-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: opacity 140ms ease;
+}
+
+.mkp-mini-btn:hover {
+  opacity: 1;
+  background: var(--mkp-hover-bg);
+}
+
+.mkp-footer {
+  color: var(--mkp-muted);
+  font-size: 10.5px;
+  text-align: center;
+  padding-top: 7px;
+}
+
+/* --------------------------------------------------------------- boutons */
+
+.mkp-btn {
+  border: 1px solid var(--mkp-line);
+  background: var(--mkp-paper);
+  color: var(--mkp-ink);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.mkp-btn:hover {
+  background: var(--mkp-hover-bg);
+}
+
+.mkp-btn:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.mkp-btn-primary {
+  background: var(--mkp-ink);
+  border-color: var(--mkp-ink);
+  color: var(--mkp-paper);
+  flex: 1;
+}
+
+.mkp-btn-primary:hover {
+  background: var(--mkp-ink);
+  opacity: 0.85;
+}
+
+.mkp-btn-danger {
+  color: var(--mkp-remove);
+}
+
+.mkp-btn-wide {
+  width: 100%;
+}
+
+.mkp-btn-active {
+  border-color: var(--mkp-edit);
+  color: var(--mkp-edit);
+  background: var(--mkp-paper);
+}
+
+.mkp-panel-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.mkp-btn:focus-visible,
+.mkp-icon-btn:focus-visible,
+.mkp-mini-btn:focus-visible,
+.mkp-chip:focus-visible {
+  outline: 2px solid var(--mkp-edit);
+  outline-offset: 1px;
+}
+
+/* --------------------------------------------------------------- éditeur */
+
+.mkp-editor {
+  position: fixed;
+  z-index: 2147483647;
+  width: 340px;
+  background: var(--mkp-paper);
+  color: var(--mkp-ink);
+  border: 1px solid var(--mkp-line);
+  border-radius: 12px;
+  box-shadow: var(--mkp-shadow);
+  padding: 10px;
+  font: 13px/1.45 system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+.mkp-editor * {
+  box-sizing: border-box;
+}
+
+.mkp-editor-selector {
+  font: 11px/1.5 ui-monospace, Consolas, monospace;
+  color: var(--mkp-muted);
+  margin-bottom: 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mkp-editor-chips {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+}
+
+.mkp-chip {
+  border: 1px solid var(--mkp-line);
+  background: transparent;
+  color: var(--mkp-muted);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.mkp-chip:hover {
+  color: var(--mkp-type);
+  border-color: var(--mkp-type);
+}
+
+.mkp-chip[aria-pressed="true"] {
+  color: #fff;
+  background: var(--mkp-type);
+  border-color: var(--mkp-type);
+}
+
+@media (prefers-color-scheme: dark) {
+  .mkp-chip[aria-pressed="true"] {
+    color: #16181d;
+  }
+}
+
+.mkp-editor-input {
+  width: 100%;
+  min-height: 64px;
+  resize: vertical;
+  border: 1px solid var(--mkp-line);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font: 13px/1.45 system-ui, sans-serif;
+  color: var(--mkp-ink);
+  background: var(--mkp-paper);
+}
+
+.mkp-editor-input:focus {
+  outline: 2px solid var(--mkp-edit);
+  outline-offset: -1px;
+}
+
+.mkp-editor-row {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* --------------------------------------------------------------- divers */
+
+.mkp-hidden-ta {
+  position: fixed;
+  top: -1000px;
+  left: -1000px;
+  opacity: 0;
+}
+
+/* ------------------------------------------------------- statut résolu */
+
+.mkp-entry.mkp-done {
+  opacity: 0.55;
+}
+
+.mkp-entry.mkp-done .mkp-entry-comment {
+  text-decoration: line-through;
+}
+
+.mkp-chip-resolved {
+  --mkp-type: var(--mkp-add);
+}
+
+.mkp-badge.mkp-done {
+  opacity: 0.35;
+}
+
+/* ------------------------------------------------------- info erreurs */
+
+.mkp-errors-info {
+  color: var(--mkp-bug);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 2px 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mkp-badge,
+  .mkp-badge.mkp-pop,
+  .mkp-entry,
+  .mkp-btn,
+  .mkp-chip,
+  .mkp-mini-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+}

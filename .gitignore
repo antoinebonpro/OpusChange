@@ -1,0 +1,12 @@
+# Fichiers personnels — ne pas publier
+.remember/
+mail-presentation.md
+
+# Archives de build
+*.zip
+*.xpi
+
+# Divers
+.DS_Store
+Thumbs.db
+web-ext-artifacts/
