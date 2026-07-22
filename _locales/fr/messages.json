@@ -1,6 +1,6 @@
 {
   "extName": { "message": "OpusChange" },
-  "extDesc": { "message": "Annotez n'importe quelle page web par clic sur les éléments HTML, puis exportez des instructions ultra-précises (sélecteur CSS, chemin complet, section, styles, HTML) pour votre IA." },
+  "extDesc": { "message": "Annotez une page web en cliquant sur ses éléments et exportez des instructions précises pour l'IA (sélecteurs CSS, chemins, styles)." },
   "actionTitle": { "message": "OpusChange — Annoter cette page (Alt+Shift+M)" },
   "cmdDesc": { "message": "Activer/désactiver OpusChange sur la page" },
 

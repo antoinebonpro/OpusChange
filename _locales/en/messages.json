@@ -1,6 +1,6 @@
 {
   "extName": { "message": "OpusChange" },
-  "extDesc": { "message": "Annotate any web page by clicking its HTML elements, then export ultra-precise instructions (CSS selector, full path, section, styles, HTML) for your AI." },
+  "extDesc": { "message": "Annotate any web page by clicking its elements and export precise AI-ready instructions (CSS selectors, paths, styles). 100% local." },
   "actionTitle": { "message": "OpusChange — Annotate this page (Alt+Shift+M)" },
   "cmdDesc": { "message": "Toggle OpusChange on the page" },
 
