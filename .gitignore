@@ -3,6 +3,7 @@
 mail-presentation.md
 
 # Archives de build
+dist/
 *.zip
 *.xpi
 
