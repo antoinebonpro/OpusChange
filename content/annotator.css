@@ -317,10 +317,11 @@
   border: none;
   background: transparent;
   cursor: pointer;
+  color: var(--mkp-ink);
   font-size: 12px;
   padding: 2px 4px;
   border-radius: 4px;
-  opacity: 0.5;
+  opacity: 0.6;
   transition: opacity 140ms ease;
 }
 
