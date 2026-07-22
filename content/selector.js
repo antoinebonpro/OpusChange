@@ -169,8 +169,26 @@
     return html;
   }
 
+  /* Plan de la page : titres h1-h3 avec leur sélecteur (30 max). */
+  function pageOutline() {
+    const out = [];
+    for (const hd of document.querySelectorAll('h1, h2, h3')) {
+      if (out.length >= 30) break;
+      if (hd.closest('[data-mkp]')) continue;
+      const text = excerpt(hd, 60);
+      if (!text) continue;
+      out.push({
+        level: hd.tagName.toLowerCase(),
+        text,
+        selector: getSelector(hd),
+      });
+    }
+    return out;
+  }
+
   window.__mkp = {
     getSelector,
+    pageOutline,
     describeNode,
     buildFullPath,
     sectionContext,
